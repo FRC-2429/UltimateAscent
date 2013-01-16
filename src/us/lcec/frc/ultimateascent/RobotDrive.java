@@ -3,6 +3,8 @@ package us.lcec.frc.ultimateascent;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class RobotDrive {
@@ -11,9 +13,11 @@ public class RobotDrive {
     SpeedController rightOne, rightTwo;
     
     
-    DriveControlMethod methodToDrive = new ShaneDrive();
+
     
  
+    SendableChooser driveMethodChooser;
+    
 
     public RobotDrive() {
         leftOne = new Jaguar(ElectronicsMap.leftOneDrive);
@@ -25,6 +29,12 @@ public class RobotDrive {
         
         
         
+        driveMethodChooser = new SendableChooser();
+        driveMethodChooser.addDefault("Shane Drive", new ShaneDrive());
+        
+        SmartDashboard.putData("DriveMethod",driveMethodChooser);
+        
+        
         
     }
     
@@ -32,6 +42,8 @@ public class RobotDrive {
     
     void update()
     {
+        
+        DriveControlMethod methodToDrive = (DriveControlMethod) driveMethodChooser.getSelected();
         
         double forward = methodToDrive.getForward();
         double rotation = methodToDrive.getRotation();
