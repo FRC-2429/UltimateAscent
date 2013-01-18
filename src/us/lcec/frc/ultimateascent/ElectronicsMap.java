@@ -6,10 +6,10 @@ import edu.wpi.first.wpilibj.Joystick;
 public class ElectronicsMap {
 
     
-    final static public int rightOneDrive = 1;
-    final static public int rightTwoDrive = 2;
-    final static public int leftOneDrive = 3;
-    final static public int leftTwoDrive = 4;
+    final static public int rightOneDrive = 11;
+    final static public int rightTwoDrive = 7;
+    final static public int leftOneDrive = 20;
+    final static public int leftTwoDrive = 3;
     
     public static Joystick joy1;
     public static Joystick joy2;

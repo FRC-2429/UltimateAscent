@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package us.lcec.frc.ultimateascent;
 
+import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
@@ -26,6 +27,9 @@ public class UltimateAscentMain extends IterativeRobot {
      */
     RobotDrive drive;
 
+    
+    AnalogChannel an;
+    
     public void robotInit() {
         drive = new RobotDrive();
 
@@ -33,6 +37,8 @@ public class UltimateAscentMain extends IterativeRobot {
         ElectronicsMap.joy2 = new Joystick(2);
         ElectronicsMap.xbox = new Joystick(3);
 
+        
+        an = new AnalogChannel(1);
 
         System.out.println("Ready");
     }
@@ -49,9 +55,12 @@ public class UltimateAscentMain extends IterativeRobot {
     public void teleopPeriodic() {
 
 
+      
+        
         drive.update();
 
     }
+    
 
     /**
      * This function is called periodically during test mode
