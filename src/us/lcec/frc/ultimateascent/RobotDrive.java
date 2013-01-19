@@ -37,17 +37,7 @@ public class RobotDrive {
             LiveWindow.addActuator("RobotDrive", "rightTwo", rightTwo);
             
             
-            leftOne.changeControlMode(CANJaguar.ControlMode.kPosition);
-            rightOne.changeControlMode(CANJaguar.ControlMode.kPosition);
-            
-            
-            
-            leftOne.configEncoderCodesPerRev(250);
-            rightOne.configEncoderCodesPerRev(250);
-            
-            
-            leftOne.setPositionReference(CANJaguar.PositionReference.kQuadEncoder);
-            rightOne.setPositionReference(CANJaguar.PositionReference.kQuadEncoder);
+           
         
             
             driveMethodChooser = new SendableChooser();
@@ -68,33 +58,30 @@ public class RobotDrive {
     {
        
         
-       try {
-            System.out.println(leftOne.getPosition() + " " + rightOne.getPosition());
+     
             
-    //        DriveControlMethod methodToDrive = (DriveControlMethod) driveMethodChooser.getSelected();
-    //        
-    //        double forward = methodToDrive.getForward();
-    //        double rotation = methodToDrive.getRotation();
-    //        
-    //        double left = forward + rotation;
-    //        double right = forward -  rotation;
-    //        
-    //        
-    //        
-    //        double maximum = Math.max(Math.abs(left), Math.abs(right));
-    //        if (maximum > 1)
-    //        {
-    //            left/= maximum;
-    //            right/= maximum;
-    //        }
-    //        
-    //        leftOne.set(left);
-    //        leftTwo.set(left);
-    //        rightOne.set(-right);
-    //        rightTwo.set(-right);
-        } catch (CANTimeoutException ex) {
-            ex.printStackTrace();
-        }
+            DriveControlMethod methodToDrive = (DriveControlMethod) driveMethodChooser.getSelected();
+            
+            double forward = methodToDrive.getForward();
+            double rotation = methodToDrive.getRotation();
+            
+            double left = forward + rotation;
+            double right = forward -  rotation;
+            
+            
+            
+            double maximum = Math.max(Math.abs(left), Math.abs(right));
+            if (maximum > 1)
+            {
+                left/= maximum;
+                right/= maximum;
+            }
+            
+            leftOne.set(left);
+            leftTwo.set(left);
+            rightOne.set(-right);
+            rightTwo.set(-right);
+        
     }
     
     
