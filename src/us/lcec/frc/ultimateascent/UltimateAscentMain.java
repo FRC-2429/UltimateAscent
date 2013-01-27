@@ -6,11 +6,19 @@
 /*----------------------------------------------------------------------------*/
 package us.lcec.frc.ultimateascent;
 
+import com.sun.squawk.debugger.JDWPListener;
+import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.HiTechnicColorSensor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,10 +33,25 @@ public class UltimateAscentMain extends IterativeRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
+    ADXL345_I2C accel;
+    
     RobotDrive drive;
 
     
-    AnalogChannel an;
+    AnalogChannel an,an2;
+    
+    
+    DigitalInput one,two,three;
+    
+    
+    Gyro g;
+    
+    
+    LegoLightSensor light;
+    PIDController controller;
+    
+    
+    HiTechnicColorSensor color;
     
     public void robotInit() {
         drive = new RobotDrive();
@@ -36,28 +59,143 @@ public class UltimateAscentMain extends IterativeRobot {
         ElectronicsMap.joy1 = new Joystick(1);
         ElectronicsMap.joy2 = new Joystick(2);
         ElectronicsMap.xbox = new Joystick(3);
-
         
-        an = new AnalogChannel(1);
+        accel = new ADXL345_I2C(1, ADXL345_I2C.DataFormat_Range.k2G);
+        
+        //color = new HiTechnicColorSensor(1);
+        //SmartDashboard.putData("HiColor", color);
+        
+        
+        
+        
+        an = new AnalogChannel(4);
+        an2 = new AnalogChannel(2);
+        g = new Gyro(1);
+        
+        one = new DigitalInput(1);
+        two = new DigitalInput(2);
+        three = new DigitalInput(3);
+        
+        
+        light = new LegoLightSensor(3);
+        
+      
+        
+        controller = new PIDController(.01, 0, 0, g, new PIDOutput() {
 
+            public void pidWrite(double output) {
+                drive.set(0,output);
+            }
+        });
+        
+        
+        SmartDashboard.putData("Foo", controller);
+        
         System.out.println("Ready");
+    }
+
+    
+    
+    
+    public void autonomousInit() {
+//        g.reset();
+//        
+//        controller.setAbsoluteTolerance(1);
+//        controller.setSetpoint(50);
+//        controller.enable();
+//        
+//        autoQueue.addTask(new PidComplete(controller), new Runnable() {
+//
+//            public void run() {
+//                
+//                System.out.println("Done");
+//            }
+//        });
+        
+        autoQueue.clear();
+        drive.set(.2, 0);
+        
+        autoQueue.addTask(new TillLight(light), new Runnable() {
+
+            public void run() {
+                System.out.println("Done");
+                drive.set(0, 0);
+                
+                g.reset();
+        
+             controller.setAbsoluteTolerance(1);
+           controller.setSetpoint(50);
+            controller.enable();
+                autoQueue.addTask(new PidComplete(controller), new Runnable() {
+
+                    public void run() { 
+                        System.out.println("Done2");
+                 drive.set(0, 0);
+                    }
+                });
+            }
+        });
     }
 
     /**
      * This function is called periodically during autonomous
      */
+    
+    
+    ActionQueue autoQueue = new ActionQueue();
+    
+    
     public void autonomousPeriodic() {
+        autoQueue.update();
+        
+        //System.out.println(g.getAngle());
+        //System.out.println(controller.get());
+        
     }
 
     /**
      * This function is called periodically during operator control
      */
+    
+    boolean hit = false;
+
+    public void teleopInit() {
+        hit = false;
+    }
+    
+    
+    
     public void teleopPeriodic() {
 
+SmartDashboard.putBoolean("one", one.get());
+SmartDashboard.putBoolean("two", two.get());
+SmartDashboard.putBoolean("Three", three.get());
 
-      
+
+
+      SmartDashboard.putNumber("Senor", an.getAverageVoltage() / 9.8 * 1000);
+      SmartDashboard.putNumber("Senor2", an2.getAverageVoltage() / 9.8 * 1000);
         
-        drive.update();
+      //SmartDashboard.putNumber("Color2",color.getColor());
+      
+      
+      
+     
+      
+//      if (two.get())
+//          hit = true;
+//      
+//      if (!hit)
+//        drive.set(.1,0);
+//        //drive.update();
+//      else
+//          drive.set(0,0);
+      
+      
+      //drive.update();
+      SmartDashboard.putData("Gyro", g);
+      
+      
 
     }
     

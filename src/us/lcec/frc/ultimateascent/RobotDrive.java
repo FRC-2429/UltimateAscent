@@ -54,17 +54,9 @@ public class RobotDrive {
     
     
     
-    void update()
+    void set(double forward, double rotation)
     {
-       
-        
      
-            
-            DriveControlMethod methodToDrive = (DriveControlMethod) driveMethodChooser.getSelected();
-            
-            double forward = methodToDrive.getForward();
-            double rotation = methodToDrive.getRotation();
-            
             double left = forward + rotation;
             double right = forward -  rotation;
             
@@ -81,6 +73,21 @@ public class RobotDrive {
             leftTwo.set(left);
             rightOne.set(-right);
             rightTwo.set(-right);
+    }
+    
+    
+    
+    void update()
+    {
+       
+        
+     
+            
+            DriveControlMethod methodToDrive = (DriveControlMethod) driveMethodChooser.getSelected();
+                double forward = methodToDrive.getForward();
+            double rotation = methodToDrive.getRotation();
+            
+          set(forward,rotation);
         
     }
     
