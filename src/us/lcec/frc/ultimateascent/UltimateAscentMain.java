@@ -33,25 +33,25 @@ public class UltimateAscentMain extends IterativeRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
-    ADXL345_I2C accel;
+    //ADXL345_I2C accel;
     
     RobotDrive drive;
 
     
-    AnalogChannel an,an2;
+    //AnalogChannel an,an2;
     
     
-    DigitalInput one,two,three;
+    //DigitalInput one,two,three;
     
     
-    Gyro g;
+    //Gyro g;
     
     
-    LegoLightSensor light;
+    //LegoLightSensor light;
     PIDController controller;
     
     
-    HiTechnicColorSensor color;
+    //HiTechnicColorSensor color;
     
     public void robotInit() {
         drive = new RobotDrive();
@@ -60,7 +60,7 @@ public class UltimateAscentMain extends IterativeRobot {
         ElectronicsMap.joy2 = new Joystick(2);
         ElectronicsMap.xbox = new Joystick(3);
         
-        accel = new ADXL345_I2C(1, ADXL345_I2C.DataFormat_Range.k2G);
+        //accel = new ADXL345_I2C(1, ADXL345_I2C.DataFormat_Range.k2G);
         
         //color = new HiTechnicColorSensor(1);
         //SmartDashboard.putData("HiColor", color);
@@ -68,29 +68,29 @@ public class UltimateAscentMain extends IterativeRobot {
         
         
         
-        an = new AnalogChannel(4);
-        an2 = new AnalogChannel(2);
-        g = new Gyro(1);
-        
-        one = new DigitalInput(1);
-        two = new DigitalInput(2);
-        three = new DigitalInput(3);
-        
-        
-        light = new LegoLightSensor(3);
+//        an = new AnalogChannel(4);
+//        an2 = new AnalogChannel(2);
+//        g = new Gyro(1);
+//        
+//        one = new DigitalInput(1);
+//        two = new DigitalInput(2);
+//        three = new DigitalInput(3);
+//        
+//        
+//        light = new LegoLightSensor(3);
         
       
         
-        controller = new PIDController(.01, 0, 0, g, new PIDOutput() {
-
-            public void pidWrite(double output) {
-                drive.set(0,output);
-            }
-        });
+//        controller = new PIDController(.01, 0, 0, g, new PIDOutput() {
+//
+//            public void pidWrite(double output) {
+//                drive.set(0,output);
+//            }
+//        });
         
         
-        SmartDashboard.putData("Foo", controller);
-        
+//        SmartDashboard.putData("Foo", controller);
+//        
         System.out.println("Ready");
     }
 
@@ -112,29 +112,29 @@ public class UltimateAscentMain extends IterativeRobot {
 //            }
 //        });
         
-        autoQueue.clear();
-        drive.set(.2, 0);
-        
-        autoQueue.addTask(new TillLight(light), new Runnable() {
-
-            public void run() {
-                System.out.println("Done");
-                drive.set(0, 0);
-                
-                g.reset();
-        
-             controller.setAbsoluteTolerance(1);
-           controller.setSetpoint(50);
-            controller.enable();
-                autoQueue.addTask(new PidComplete(controller), new Runnable() {
-
-                    public void run() { 
-                        System.out.println("Done2");
-                 drive.set(0, 0);
-                    }
-                });
-            }
-        });
+//        autoQueue.clear();
+//        drive.set(.2, 0);
+//        
+//        autoQueue.addTask(new TillLight(light), new Runnable() {
+//
+//            public void run() {
+//                System.out.println("Done");
+//                drive.set(0, 0);
+//                
+//                g.reset();
+//        
+//             controller.setAbsoluteTolerance(1);
+//           controller.setSetpoint(50);
+//            controller.enable();
+//                autoQueue.addTask(new PidComplete(controller), new Runnable() {
+//
+//                    public void run() { 
+//                        System.out.println("Done2");
+//                 drive.set(0, 0);
+//                    }
+//                });
+//            }
+//        });
     }
 
     /**
@@ -167,15 +167,15 @@ public class UltimateAscentMain extends IterativeRobot {
     
     public void teleopPeriodic() {
 
-SmartDashboard.putBoolean("one", one.get());
-SmartDashboard.putBoolean("two", two.get());
-SmartDashboard.putBoolean("Three", three.get());
-
-
-
-      SmartDashboard.putNumber("Senor", an.getAverageVoltage() / 9.8 * 1000);
-      SmartDashboard.putNumber("Senor2", an2.getAverageVoltage() / 9.8 * 1000);
-        
+//SmartDashboard.putBoolean("one", one.get());
+//SmartDashboard.putBoolean("two", two.get());
+//SmartDashboard.putBoolean("Three", three.get());
+//
+//
+//
+//      SmartDashboard.putNumber("Senor", an.getAverageVoltage() / 9.8 * 1000);
+//      SmartDashboard.putNumber("Senor2", an2.getAverageVoltage() / 9.8 * 1000);
+//        
       //SmartDashboard.putNumber("Color2",color.getColor());
       
       
@@ -191,9 +191,11 @@ SmartDashboard.putBoolean("Three", three.get());
 //      else
 //          drive.set(0,0);
       
+        
+        
       
-      //drive.update();
-      SmartDashboard.putData("Gyro", g);
+      drive.update();
+      //SmartDashboard.putData("Gyro", g);
       
       
 
