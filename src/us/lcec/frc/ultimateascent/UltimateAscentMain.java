@@ -53,13 +53,13 @@ public class UltimateAscentMain extends IterativeRobot {
     
     //HiTechnicColorSensor color;
     
+    
+    
     public void robotInit() {
+        ElectronicsMap.init();
+        
         drive = new RobotDrive();
 
-        ElectronicsMap.joy1 = new Joystick(1);
-        ElectronicsMap.joy2 = new Joystick(2);
-        ElectronicsMap.xbox = new Joystick(3);
-        
         //accel = new ADXL345_I2C(1, ADXL345_I2C.DataFormat_Range.k2G);
         
         //color = new HiTechnicColorSensor(1);
@@ -166,37 +166,23 @@ public class UltimateAscentMain extends IterativeRobot {
     
     
     public void teleopPeriodic() {
-
-//SmartDashboard.putBoolean("one", one.get());
-//SmartDashboard.putBoolean("two", two.get());
-//SmartDashboard.putBoolean("Three", three.get());
-//
-//
-//
-//      SmartDashboard.putNumber("Senor", an.getAverageVoltage() / 9.8 * 1000);
-//      SmartDashboard.putNumber("Senor2", an2.getAverageVoltage() / 9.8 * 1000);
-//        
-      //SmartDashboard.putNumber("Color2",color.getColor());
+        
+        
+        if (!ElectronicsMap.recorder.play.playing)
+        {
+           drive.update();
+        }
+        
       
+
+       ElectronicsMap.recorder.update();
       
       
      
       
-//      if (two.get())
-//          hit = true;
-//      
-//      if (!hit)
-//        drive.set(.1,0);
-//        //drive.update();
-//      else
-//          drive.set(0,0);
       
-        
-        
-      
-      drive.update();
-      //SmartDashboard.putData("Gyro", g);
-      
+      SmartDashboard.putNumber("LeftSonar", ElectronicsMap.leftSonar.getInches());
+      SmartDashboard.putNumber("RightSonar", ElectronicsMap.rightSonar.getInches());
       
 
     }
