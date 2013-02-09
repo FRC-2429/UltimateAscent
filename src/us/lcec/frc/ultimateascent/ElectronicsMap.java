@@ -18,7 +18,7 @@ public class ElectronicsMap {
             rightOneDrive = 20;
             rightTwoDrive = 7;
             leftOneDrive = 3;
-            leftTwoDrive = 14;
+            leftTwoDrive = 12;
         }
         
     }

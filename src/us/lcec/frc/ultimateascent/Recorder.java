@@ -107,7 +107,7 @@ public class Recorder {
                 fileOut.writeByte(-1);
                 fileOut.writeLong(deltaTime);
                 
-                lastTime = System.currentTimeMillis();
+                lastTime += deltaTime;
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

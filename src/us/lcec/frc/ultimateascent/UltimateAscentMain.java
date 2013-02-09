@@ -9,6 +9,7 @@ package us.lcec.frc.ultimateascent;
 import com.sun.squawk.debugger.JDWPListener;
 import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.HiTechnicColorSensor;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.can.CANTimeoutException;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -34,43 +36,30 @@ public class UltimateAscentMain extends IterativeRobot {
      * used for any initialization code.
      */
     //ADXL345_I2C accel;
-    
     RobotDrive drive;
-
-    
     //AnalogChannel an,an2;
-    
-    
     //DigitalInput one,two,three;
-    
-    
-    //Gyro g;
-    
-    
+    Gyro g;
     //LegoLightSensor light;
     PIDController controller;
-    
-    
+
     //HiTechnicColorSensor color;
-    
-    
-    
     public void robotInit() {
         ElectronicsMap.init();
-        
+
         drive = new RobotDrive();
 
         //accel = new ADXL345_I2C(1, ADXL345_I2C.DataFormat_Range.k2G);
-        
+
         //color = new HiTechnicColorSensor(1);
         //SmartDashboard.putData("HiColor", color);
-        
-        
-        
-        
+
+
+
+
 //        an = new AnalogChannel(4);
 //        an2 = new AnalogChannel(2);
-//        g = new Gyro(1);
+        g = new Gyro(1);
 //        
 //        one = new DigitalInput(1);
 //        two = new DigitalInput(2);
@@ -78,115 +67,151 @@ public class UltimateAscentMain extends IterativeRobot {
 //        
 //        
 //        light = new LegoLightSensor(3);
-        
-      
-        
-//        controller = new PIDController(.01, 0, 0, g, new PIDOutput() {
-//
-//            public void pidWrite(double output) {
-//                drive.set(0,output);
-//            }
-//        });
-        
-        
+
+
+
+        controller = new PIDController(1, 0, 0, g, new PIDOutput() {
+            public void pidWrite(double output) {
+                output = Math.max(output, -.2);
+                output = Math.min(output, .2);
+                drive.set(0, output);
+            }
+        });
+
+
 //        SmartDashboard.putData("Foo", controller);
 //        
         System.out.println("Ready");
     }
 
-    
-    
-    
     public void autonomousInit() {
-//        g.reset();
-//        
-//        controller.setAbsoluteTolerance(1);
-//        controller.setSetpoint(50);
-//        controller.enable();
-//        
-//        autoQueue.addTask(new PidComplete(controller), new Runnable() {
-//
-//            public void run() {
-//                
-//                System.out.println("Done");
-//            }
-//        });
-        
-//        autoQueue.clear();
-//        drive.set(.2, 0);
-//        
-//        autoQueue.addTask(new TillLight(light), new Runnable() {
-//
-//            public void run() {
-//                System.out.println("Done");
-//                drive.set(0, 0);
-//                
-//                g.reset();
-//        
-//             controller.setAbsoluteTolerance(1);
-//           controller.setSetpoint(50);
-//            controller.enable();
-//                autoQueue.addTask(new PidComplete(controller), new Runnable() {
-//
-//                    public void run() { 
-//                        System.out.println("Done2");
-//                 drive.set(0, 0);
-//                    }
-//                });
-//            }
-//        });
-    }
 
+
+
+        autoQueue.clear();
+        g.reset();
+
+        controller.setAbsoluteTolerance(4);
+        controller.setSetpoint(10);
+        controller.enable();
+
+
+
+
+        autoQueue.addTask(new PidComplete(controller), new Runnable() {
+            public void run() {
+
+                controller.disable();
+                drive.set(.2, 0);
+                System.out.println("Done");
+                autoQueue.addTask(new TimeSince(1000), new Runnable() {
+                    public void run() {
+                        autoQueue.addTask(new TillDistance(ElectronicsMap.leftSonar, 100), new Runnable() {
+                            public void run() {
+                                System.out.println("Done");
+                                drive.set(0, 0);
+
+                                controller.setSetpoint(0);
+                                controller.enable();
+                                autoQueue.addTask(new PidComplete(controller), new Runnable() {
+                                    public void run() {
+                                        controller.disable();
+                                        drive.set(.2, 0);
+                                        autoQueue.addTask(new TillDistance(ElectronicsMap.leftSonar, 45), new Runnable() {
+
+                                            public void run() {
+                                                drive.set(0, 0);
+                                                 controller.setSetpoint(55);
+                                                 controller.enable();
+                                                 autoQueue.addTask(new PidComplete(controller), new Runnable() {
+
+                                                    public void run() {
+                                                        controller.disable();
+                                                        drive.set(.2, 0);
+                                                        autoQueue.addTask(new TillDistance(ElectronicsMap.leftSonar, 9), new Runnable() {
+
+                                                            public void run() {
+                                                                drive.set(0,0);
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+
+
+                            }
+                        });
+                    }
+                });
+
+
+            }
+        });
+
+    }
     /**
      * This function is called periodically during autonomous
      */
-    
-    
     ActionQueue autoQueue = new ActionQueue();
-    
-    
+
     public void autonomousPeriodic() {
         autoQueue.update();
-        
+
+        SmartDashboard.putNumber("LeftSonar", ElectronicsMap.leftSonar.getInches());
+        SmartDashboard.putNumber("RightSonar", ElectronicsMap.rightSonar.getInches());
+
         //System.out.println(g.getAngle());
         //System.out.println(controller.get());
-        
+
     }
-    
     /**
      * This function is called periodically during operator control
      */
-    
     boolean hit = false;
 
     public void teleopInit() {
-        hit = false;
+        g.reset();
+
+//        controller.setSetpoint(360);
+//        controller.setAbsoluteTolerance(.01);
+//        
+        controller.disable();
+
     }
-    
-    
-    
+
     public void teleopPeriodic() {
-        
-        
-        if (!ElectronicsMap.recorder.play.playing)
-        {
-           drive.update();
-        }
-        
-      
+        try {
+            if (!ElectronicsMap.recorder.play.playing) {
+                drive.update();
+            }
 
-       ElectronicsMap.recorder.update();
-      
-      
-     
-      
-      
-      SmartDashboard.putNumber("LeftSonar", ElectronicsMap.leftSonar.getInches());
-      SmartDashboard.putNumber("RightSonar", ElectronicsMap.rightSonar.getInches());
-      
+
+
+            SmartDashboard.putString("leftOne", drive.leftOne.getOutputCurrent() + " " + drive.leftOne.getOutputVoltage());
+            SmartDashboard.putString("leftTwo", drive.leftTwo.getOutputCurrent() + " " + drive.leftTwo.getOutputVoltage());
+            SmartDashboard.putString("rightOne", drive.rightOne.getOutputCurrent() + " " + drive.rightOne.getOutputVoltage());
+            SmartDashboard.putString("rightTwo", drive.rightTwo.getOutputCurrent() + " " + drive.rightTwo.getOutputVoltage());
+
+
+            ElectronicsMap.recorder.update();
+
+
+
+            SmartDashboard.putNumber("gyro", g.getAngle());
+
+
+
+            SmartDashboard.putNumber("LeftSonar", ElectronicsMap.leftSonar.getInches());
+            SmartDashboard.putNumber("RightSonar", ElectronicsMap.rightSonar.getInches());
+        } catch (CANTimeoutException ex) {
+            ex.printStackTrace();
+        }
+
 
     }
-    
 
     /**
      * This function is called periodically during test mode
