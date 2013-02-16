@@ -42,12 +42,15 @@ public class UltimateAscentMain extends IterativeRobot {
     Gyro g;
     //LegoLightSensor light;
     PIDController controller;
+    
+    Arm a;
 
     //HiTechnicColorSensor color;
     public void robotInit() {
         ElectronicsMap.init();
 
         drive = new RobotDrive();
+        a=new Arm();
 
         //accel = new ADXL345_I2C(1, ADXL345_I2C.DataFormat_Range.k2G);
 
@@ -186,6 +189,7 @@ public class UltimateAscentMain extends IterativeRobot {
         try {
             if (!ElectronicsMap.recorder.play.playing) {
                 drive.update();
+                a.update();
             }
 
 

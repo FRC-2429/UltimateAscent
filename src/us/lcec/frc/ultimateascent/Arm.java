@@ -61,9 +61,9 @@ public class Arm {
         update();
     }
     
-    public void update(){
-        
-//        try {
+    public void limitCheck()
+    {
+        //        try {
 //            front = arm1.getForwardLimitOK();
 //            back=arm1.getReverseLimitOK();
 //        } catch (CANTimeoutException ex) {
@@ -78,5 +78,27 @@ public class Arm {
 //        } catch (CANTimeoutException ex) {
 //            ex.printStackTrace();
 //        }
+    }
+    
+    public void update(){
+        
+            double ramp = ElectronicsMap.joy1.getZ();
+        ramp = (ramp +1.0)/2.0;
+        double arm = ElectronicsMap.xbox.getZ();
+        double rotateInput=ElectronicsMap.xbox.getY();
+        if(ElectronicsMap.xbox.getRawButton(1)){
+            set(arm*ramp,rotateInput*ramp);
+            System.out.print("im running"+" "+ramp+" "+ramp*arm+" "+arm+" ");
+            try {
+                System.out.println(arm1.getOutputCurrent()+"a "+arm2.getOutputCurrent()+"a");
+            } catch (CANTimeoutException ex) {
+                ex.printStackTrace();
+            }
+        }else{
+            set(0,0);
+            //System.out.println("Why you no press buttonz");
+        }
+        
+
     }
 }
