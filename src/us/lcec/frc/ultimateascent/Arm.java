@@ -25,8 +25,8 @@ public class Arm {
             arm2 = new CANJaguar(ElectronicsMap.armTwo);
             arm1.configNeutralMode(CANJaguar.NeutralMode.kBrake);
             arm2.configNeutralMode(CANJaguar.NeutralMode.kBrake);
-            arm1.configNeutralMode(CANJaguar.NeutralMode.kCoast);
-            arm2.configNeutralMode(CANJaguar.NeutralMode.kCoast);
+           
+           
             rotate = new CANJaguar(ElectronicsMap.armRotate);
             
         } catch (CANTimeoutException ex) {
@@ -82,7 +82,7 @@ public class Arm {
     
     public void update(){
         
-            double ramp = ElectronicsMap.joy1.getZ();
+        double ramp = ElectronicsMap.joy1.getZ();
         ramp = (ramp +1.0)/2.0;
         double arm = ElectronicsMap.xbox.getZ();
         double rotateInput=ElectronicsMap.xbox.getY();
