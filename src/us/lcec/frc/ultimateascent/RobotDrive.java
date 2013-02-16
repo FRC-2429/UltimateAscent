@@ -25,6 +25,15 @@ public class RobotDrive {
 
             rightOne = new CANJaguar(ElectronicsMap.rightOneDrive);
             rightTwo = new CANJaguar(ElectronicsMap.rightTwoDrive);
+            
+            
+            CANJaguar.NeutralMode mode = CANJaguar.NeutralMode.kBrake;
+            leftOne.configNeutralMode(mode);
+            leftTwo.configNeutralMode(mode);
+            rightOne.configNeutralMode(mode);
+            rightTwo.configNeutralMode(mode);
+            
+            
             a=new Arm();
 //            arm1 = new CANJaguar(11);
 //            arm1.configNeutralMode(CANJaguar.NeutralMode.kBrake);
@@ -156,7 +165,7 @@ public class RobotDrive {
         double rotate=ElectronicsMap.xbox.getY();
         if(ElectronicsMap.xbox.getRawButton(1)){
             a.set(arm*ramp,rotate*ramp);
-//            System.out.print("im running"+" "+ramp+" "+ramp*arm+" "+arm+" ");
+            System.out.print("im running"+" "+ramp+" "+ramp*arm+" "+arm+" ");
             try {
                 System.out.println(a.arm1.getOutputCurrent()+"a "+a.arm2.getOutputCurrent()+"a");
             } catch (CANTimeoutException ex) {

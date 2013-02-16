@@ -25,6 +25,8 @@ public class Arm {
             arm2 = new CANJaguar(ElectronicsMap.armTwo);
             arm1.configNeutralMode(CANJaguar.NeutralMode.kBrake);
             arm2.configNeutralMode(CANJaguar.NeutralMode.kBrake);
+            arm1.configNeutralMode(CANJaguar.NeutralMode.kCoast);
+            arm2.configNeutralMode(CANJaguar.NeutralMode.kCoast);
             rotate = new CANJaguar(ElectronicsMap.armRotate);
             
         } catch (CANTimeoutException ex) {
@@ -44,6 +46,7 @@ public class Arm {
         }
         try {
             arm1.setX(x);
+//            arm1.setX(0);
             arm2.setX(x);
             rotate.setX(r);
         } catch (CANTimeoutException ex) {
@@ -60,20 +63,20 @@ public class Arm {
     
     public void update(){
         
-        try {
-            front = arm1.getForwardLimitOK();
-            back=arm1.getReverseLimitOK();
-        } catch (CANTimeoutException ex) {
-            ex.printStackTrace();
-        }
-        if(front&&back)
-            return;
-        else
-            try {
-            arm1.setX(0);
-            arm2.setX(0);
-        } catch (CANTimeoutException ex) {
-            ex.printStackTrace();
-        }
+//        try {
+//            front = arm1.getForwardLimitOK();
+//            back=arm1.getReverseLimitOK();
+//        } catch (CANTimeoutException ex) {
+//            ex.printStackTrace();
+//        }
+//        if(front&&back)
+//            return;
+//        else
+//            try {
+//            arm1.setX(0);
+//            arm2.setX(0);
+//        } catch (CANTimeoutException ex) {
+//            ex.printStackTrace();
+//        }
     }
 }

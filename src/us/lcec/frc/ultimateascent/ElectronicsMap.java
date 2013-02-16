@@ -15,13 +15,13 @@ public class ElectronicsMap {
     static {
         if (practiceBot)
         {
-            rightOneDrive = 20;
+            rightOneDrive = 6;
             rightTwoDrive = 7;
             leftOneDrive = 3;
             leftTwoDrive = 12;
             armOne=11;
-            armTwo=4;
-            armRotate=6;
+            armTwo=20;
+            armRotate=13;
         }
         
     }
