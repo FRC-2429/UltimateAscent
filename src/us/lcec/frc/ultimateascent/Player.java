@@ -59,7 +59,7 @@ public class Player {
     void addMotor(Jaguar s){
     
         motors.put(Integer.valueOf(s.getChannel()), s);
-       
+  
     
         
     }

@@ -19,6 +19,9 @@ public class ElectronicsMap {
             rightTwoDrive = 7;
             leftOneDrive = 3;
             leftTwoDrive = 12;
+            armOne=11;
+            armTwo=4;
+            armRotate=6;
         }
         
     }
@@ -45,6 +48,9 @@ public class ElectronicsMap {
     static public int rightTwoDrive;
     static public int leftOneDrive;
     static public int leftTwoDrive;
+    static public int armOne;
+    static public int armTwo;
+    static public int armRotate;
     
     public static Joystick joy1;
     public static Joystick joy2;

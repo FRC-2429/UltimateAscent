@@ -8,10 +8,15 @@
 package us.lcec.frc.ultimateascent;
 
 
+import edu.wpi.first.wpilibj.CANJaguar;
+import edu.wpi.first.wpilibj.Dashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.buttons.NetworkButton;
+import edu.wpi.first.wpilibj.can.CANTimeoutException;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -31,26 +36,28 @@ public class RobotMain extends IterativeRobot {
      Jaguar jag2;
      Jaguar jag3;
      Jaguar jag4;
-     
+     Relay re;
      Joystick x;
      
      NetworkButton b;
-     
-     
+     RobotDrive hamburgers;
      RecordingCrio r;
-     
+     boolean init=false;
     public void robotInit() {
         System.out.println("Hello");
-      
-        
+//        try {
+//            arm = new CANJaguar(11);
+//        } catch (CANTimeoutException ex) {
+//            ex.printStackTrace();
+//        }
         jag1 = new Jaguar(1);
         jag2 = new Jaguar(2);
         jag3 = new Jaguar(3);
         jag4 = new Jaguar(4);
-        
+        //hamburgers = new RobotDrive();
+//        temp = new Jaguar(6);
         x = new Joystick(1);
        
-        
         
         //SmartDashboard.getBoolean("foo");
         SmartDashboard.putString("blah2", "Ok");
@@ -70,8 +77,6 @@ public class RobotMain extends IterativeRobot {
         r.addMotor(jag2);
         r.addMotor(jag3);
         r.addMotor(jag4);
-        
-        
         
 
     }
@@ -97,7 +102,13 @@ public class RobotMain extends IterativeRobot {
     /**
      * This function is called periodically during operator control
      */
+    public void telepInit(){
+        System.out.println(init);
+        
+    }
     public void teleopPeriodic() {
+        
+        
         if (!r.play.playing)
         {
            jag1.set(x.getY());
@@ -105,9 +116,13 @@ public class RobotMain extends IterativeRobot {
            jag3.set(-x.getY());
            jag4.set(x.getY());
         }
+        else {
+            hamburgers.update();
         
-       r.update();
-       
+        }  
+         
+       //r.update();
+      
     }
     
     /**
