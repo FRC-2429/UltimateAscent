@@ -156,10 +156,15 @@ public class RobotDrive {
         double rotate=ElectronicsMap.xbox.getY();
         if(ElectronicsMap.xbox.getRawButton(1)){
             a.set(arm*ramp,rotate*ramp);
-            System.out.println("im running"+" "+ramp+" "+ramp*arm+" "+arm);
+//            System.out.print("im running"+" "+ramp+" "+ramp*arm+" "+arm+" ");
+            try {
+                System.out.println(a.arm1.getOutputCurrent()+"a "+a.arm2.getOutputCurrent()+"a");
+            } catch (CANTimeoutException ex) {
+                ex.printStackTrace();
+            }
         }else{
             a.set(0,0);
-            System.out.println("Why you no press buttonz");
+            //System.out.println("Why you no press buttonz");
         }
     }
 }

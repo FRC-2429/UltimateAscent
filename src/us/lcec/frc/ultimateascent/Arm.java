@@ -23,6 +23,8 @@ public class Arm {
         try {
             arm1 = new CANJaguar(ElectronicsMap.armOne);
             arm2 = new CANJaguar(ElectronicsMap.armTwo);
+            arm1.configNeutralMode(CANJaguar.NeutralMode.kBrake);
+            arm2.configNeutralMode(CANJaguar.NeutralMode.kBrake);
             rotate = new CANJaguar(ElectronicsMap.armRotate);
             
         } catch (CANTimeoutException ex) {
@@ -46,6 +48,12 @@ public class Arm {
             rotate.setX(r);
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
+            try {
+                System.out.println(arm1.getOutputCurrent());
+                System.out.println(arm2.getOutputCurrent());
+            } catch (CANTimeoutException ex1) {
+                ex1.printStackTrace();
+            }
         }
         update();
     }
