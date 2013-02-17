@@ -44,7 +44,7 @@ public class UltimateAscentMain extends IterativeRobot {
     PIDController controller;
     
     Arm a;
-
+    
     //HiTechnicColorSensor color;
     public void robotInit() {
         ElectronicsMap.init();
@@ -190,9 +190,9 @@ public class UltimateAscentMain extends IterativeRobot {
             if (!ElectronicsMap.recorder.play.playing) {
                 drive.update();
                 a.update();
-            }
-
-
+          }
+            
+            
 
             SmartDashboard.putString("leftOne", drive.leftOne.getOutputCurrent() + " " + drive.leftOne.getOutputVoltage());
             SmartDashboard.putString("leftTwo", drive.leftTwo.getOutputCurrent() + " " + drive.leftTwo.getOutputVoltage());
@@ -201,20 +201,20 @@ public class UltimateAscentMain extends IterativeRobot {
 
 
             ElectronicsMap.recorder.update();
-
+            
 
 
             SmartDashboard.putNumber("gyro", g.getAngle());
 
 
-
+            
             SmartDashboard.putNumber("LeftSonar", ElectronicsMap.leftSonar.getInches());
             SmartDashboard.putNumber("RightSonar", ElectronicsMap.rightSonar.getInches());
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
         }
-
-
+        
+        
     }
 
     /**

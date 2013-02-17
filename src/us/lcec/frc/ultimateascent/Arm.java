@@ -58,7 +58,10 @@ public class Arm {
                 ex1.printStackTrace();
             }
         }
-        update();
+        
+        
+        limitCheck();
+        
     }
     
     public void limitCheck()
