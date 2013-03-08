@@ -28,6 +28,7 @@ public class Arm {
            
            
             rotate = new CANJaguar(ElectronicsMap.armRotate);
+            rotate.configNeutralMode(CANJaguar.NeutralMode.kBrake);
             
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
@@ -38,6 +39,8 @@ public class Arm {
         LiveWindow.addActuator("Arm", "arm1", arm1);
         LiveWindow.addActuator("Arm", "arm2", arm2);
 
+        
+       
     }
     
     public void set(double x,double r){
@@ -49,6 +52,7 @@ public class Arm {
 //            arm1.setX(0);
             arm2.setX(x);
             rotate.setX(r);
+            System.out.println(arm1.getOutputCurrent()+"a "+arm2.getOutputCurrent()+"a");
         } catch (CANTimeoutException ex) {
             ex.printStackTrace();
             try {
@@ -83,8 +87,73 @@ public class Arm {
 //        }
     }
     
+    
+    Runnable bigAction =  new Runnable() {
+
+            public void run() {
+                System.out.println("StartAuto");
+                manualControl = false;
+                set(0,.5);
+                
+                myQueue.addTask(new TimeSince(3000), new Runnable() {
+
+                    public void run() {
+                        set(0,0);
+                        reset();
+                    }
+                });
+                
+            }
+    };
+    
+    
+    void singleTurn(int direction)
+    {
+        manualControl = false;
+        set(direction * .5,0);
+        System.out.println(direction);
+        myQueue.addTask(new TimeSince(100), new Runnable() {
+
+            public void run() {
+                set(0,0);
+                reset();
+            }
+        });
+        
+    }
+    
+    ActionQueue myQueue = new ActionQueue();
+    boolean manualControl = true;
+    
+    public void reset()
+    {
+        manualControl = true;
+        myQueue.clear();
+        myQueue.addTask(new TillButton(ElectronicsMap.xbox, 2), bigAction);
+        myQueue.addTask(new TillButton(ElectronicsMap.joy1, 6), new Runnable() {
+
+            public void run() {
+                singleTurn(1);
+            }
+        });
+        
+        myQueue.addTask(new TillButton(ElectronicsMap.joy1, 7), new Runnable() {
+
+            public void run() {
+                singleTurn(-1);
+            }
+        });
+    }
+    
     public void update(){
         
+        
+        
+        myQueue.update();
+        
+        
+        if (manualControl)
+        {
         double ramp = ElectronicsMap.joy1.getZ();
         ramp = (ramp +1.0)/2.0;
         double arm = ElectronicsMap.xbox.getZ();
@@ -100,6 +169,7 @@ public class Arm {
         }else{
             set(0,0);
             //System.out.println("Why you no press buttonz");
+        }
         }
         
 

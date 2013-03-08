@@ -182,6 +182,7 @@ public class UltimateAscentMain extends IterativeRobot {
 //        controller.setAbsoluteTolerance(.01);
 //        
         controller.disable();
+        a.reset();
 
     }
 

@@ -11,7 +11,7 @@ package us.lcec.frc.ultimateascent;
 public class EthanDrive implements DriveControlMethod {
 
     public double getForward() {
-        return ElectronicsMap.joy1.getY();
+        return -ElectronicsMap.joy1.getY();
     }
 
     public double getRotation() {
