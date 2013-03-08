@@ -158,7 +158,8 @@ public class Arm {
         ramp = (ramp +1.0)/2.0;
         double arm = ElectronicsMap.xbox.getZ();
         double rotateInput=ElectronicsMap.xbox.getY();
-        if(ElectronicsMap.xbox.getRawButton(1)){
+       
+        
             set(arm*ramp,rotateInput*ramp);
             System.out.print("im running"+" "+ramp+" "+ramp*arm+" "+arm+" ");
             try {
@@ -166,10 +167,7 @@ public class Arm {
             } catch (CANTimeoutException ex) {
                 ex.printStackTrace();
             }
-        }else{
-            set(0,0);
-            //System.out.println("Why you no press buttonz");
-        }
+        
         }
         
 
